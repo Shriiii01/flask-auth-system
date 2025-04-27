@@ -5,15 +5,12 @@ from flask_migrate import upgrade
 def setup_db():
     app = create_app()
     with app.app_context():
-        # Run migrations
         upgrade()
         
-        # Create admin role
         admin_role = Role(name="admin")
         db.session.add(admin_role)
         db.session.commit()
         
-        # Create admin user
         admin = User(
             username="shri",
             email="shri@example.com",
@@ -25,8 +22,8 @@ def setup_db():
         db.session.add(admin)
         db.session.commit()
         
-        print("✅ Database initialized!")
-        print("✅ Admin user created:")
+        print("Database initialized")
+        print("Admin user created:")
         print(f"Email: shri@example.com")
         print(f"Password: ShriStrong123")
 

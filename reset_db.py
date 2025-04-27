@@ -30,15 +30,14 @@ def reset_db():
         db.session.add(admin)
         db.session.commit()
         
-        print("✅ Database reset complete!")
-        print("✅ Admin user created:")
+        print("Database reset complete")
+        print("Admin user created:")
         print(f"Email: shri@example.com")
         print(f"Password: ShriStrong123")
-        print("✅ ActivityLog table created")
-        print("✅ Token revocation system enabled")
+        print("ActivityLog table created")
+        print("Token revocation system enabled")
 
 if __name__ == "__main__":
-    # Wait for database to be ready
     print("Waiting for database to be ready...")
     time.sleep(5)
     reset_db() 

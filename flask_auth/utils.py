@@ -12,7 +12,6 @@ def role_required(required_role):
             user = User.query.get(user_id)
             jwt_data = get_jwt()
             
-            # Check if token has been revoked
             if not user or str(user.token_revoked_at) != jwt_data.get("token_issued_at"):
                 return jsonify({"error": "Token has been revoked"}), 401
 
@@ -31,7 +30,6 @@ def admin_required(fn):
         user = User.query.get(current_user_id)
         jwt_data = get_jwt()
         
-        # Check if token has been revoked
         if not user or str(user.token_revoked_at) != jwt_data.get("token_issued_at"):
             return jsonify({"error": "Token has been revoked"}), 401
             

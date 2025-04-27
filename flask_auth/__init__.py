@@ -21,7 +21,6 @@ def create_app():
     limiter.init_app(app)
     configure_oauth(app)
     
-    # Configure CORS
     CORS(app, resources={
         r"/*": {
             "origins": "*",
@@ -30,13 +29,11 @@ def create_app():
         }
     })
 
-    # Configure rate limiter
     app.config['RATELIMIT_HEADERS_ENABLED'] = True
     
     if app.config.get('ENV') == 'development':
         limiter.enabled = False
 
-    # Register blueprints
     from .routes.auth import auth_bp
     from .routes.main import main_bp
     from .routes.admin_routes import admin_bp
@@ -45,7 +42,6 @@ def create_app():
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp, url_prefix="/admin")
 
-    # Swagger Configuration
     swagger_config = {
         "headers": [],
         "specs": [

@@ -14,9 +14,6 @@ from datetime import datetime, timedelta
 
 auth_bp = Blueprint("auth", __name__)
 
-# =========================
-# 🚀 Register
-# =========================
 @auth_bp.route("/register", methods=["POST"])
 @limiter.limit("3 per minute")
 @swag_from({
@@ -125,9 +122,6 @@ def register():
         logger.error(f"Registration failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Registration failed"}), 500
 
-# =========================
-# ✉️ Email Verification
-# =========================
 @auth_bp.route("/verify-email/<token>", methods=["GET"])
 @swag_from({
     'tags': ['Authentication'],
@@ -188,9 +182,6 @@ def verify_email(token):
         logger.error(f"Email verification failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Email verification failed"}), 500
 
-# =========================
-# 🔐 Login
-# =========================
 @auth_bp.route("/login", methods=["POST"])
 @limiter.limit("5 per minute")
 @swag_from({
@@ -306,9 +297,6 @@ def login():
         logger.error(f"Login failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Login failed"}), 500
 
-# =========================
-# 🚪 Logout
-# =========================
 @auth_bp.route("/logout", methods=["POST"])
 @jwt_required()
 @swag_from({
@@ -354,9 +342,6 @@ def logout():
         logger.error(f"Logout failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Logout failed"}), 500
 
-# =========================
-# 🔄 Refresh Token
-# =========================
 @auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 @swag_from({
@@ -403,9 +388,6 @@ def refresh():
         logger.error(f"Token refresh failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Token refresh failed"}), 500
 
-# =========================
-# ⚠️ Rate Limit Error Handler
-# =========================
-@auth_bp.errorhandler(RateLimitExceeded)
+@auth_bp.errorhandler(429)
 def handle_rate_limit_exceeded(e):
     return jsonify({"error": "Rate limit exceeded"}), 429

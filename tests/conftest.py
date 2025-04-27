@@ -1,5 +1,3 @@
-# tests/conftest.py
-
 import pytest
 from flask_auth import create_app, db
 from flask_auth.models import User

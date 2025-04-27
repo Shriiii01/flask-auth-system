@@ -20,7 +20,6 @@ admin_bp = Blueprint("admin", __name__)
 def home():
     return "Welcome to the Authentication System!"
 
-# Register
 @auth_bp.route("/register", methods=["POST"])
 @limiter.limit("3 per minute")
 @swag_from({
@@ -296,7 +295,6 @@ def login():
         logger.error(f"Login failed: {str(e)}")
         return jsonify({"error": "Login failed"}), 500
 
-# Final version to paste and use
 @auth_bp.route("/verify-2fa-totp", methods=["POST"])
 @jwt_required()
 def verify_2fa_totp():
@@ -321,7 +319,7 @@ def verify_2fa_totp():
         access_token = create_access_token(identity=str(user.id))
         refresh_token = create_refresh_token(identity=str(user.id))
         return jsonify({
-            "message": "✅ 2FA verified",
+            "message": "2FA verified",
             "access_token": access_token,
             "refresh_token": refresh_token,
             "user": {
@@ -332,9 +330,8 @@ def verify_2fa_totp():
             }
         }), 200
     else:
-        return jsonify({"error": "❌ Invalid or expired 2FA code"}), 401
+        return jsonify({"error": "Invalid or expired 2FA code"}), 401
     
-# Refresh
 @auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 @swag_from({
@@ -380,21 +377,18 @@ def refresh():
         logger.error(f"Token refresh failed: {str(e)}")
         return jsonify({"error": "Token refresh failed"}), 500
 
-# Protected
 @auth_bp.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
     user_id = get_jwt_identity()
     return jsonify({"message": f"Access granted for user ID: {user_id}"}), 200
 
-# Admin
 @auth_bp.route("/admin-only", methods=["GET"])
 @jwt_required()
 @role_required("admin")
 def admin_only():
-    return jsonify({"message": "Welcome Admin! 🛡️"})
+    return jsonify({"message": "Welcome Admin"})
 
-# Forgot Password
 @auth_bp.route("/forgot-password", methods=["POST"])
 @limiter.limit("3 per minute")
 def forgot_password():
@@ -410,11 +404,10 @@ def forgot_password():
     db.session.commit()
 
     link = f"http://127.0.0.1:5000/auth/reset-password/{token}"
-    print(f"🔁 Simulated password reset link: {link}")
+    print(f"Password reset link: {link}")
 
     return jsonify({"message": "Reset link sent (simulated). Check console."}), 200
 
-# Reset Password
 @auth_bp.route("/reset-password/<token>", methods=["POST"])
 @limiter.limit("3 per minute")
 def reset_password(token):
@@ -431,7 +424,6 @@ def reset_password(token):
 
     return jsonify({"message": "Password has been reset successfully"}), 200
 
-# Change Password
 @auth_bp.route("/change-password", methods=["PUT"])
 @jwt_required()
 def change_password():
@@ -450,7 +442,7 @@ def change_password():
 
     return jsonify({"message": "Password changed successfully"}), 200
 
-# Update Username
+
 @auth_bp.route("/update-profile", methods=["PUT"])
 @jwt_required()
 def update_profile():
@@ -499,15 +491,15 @@ def enable_2fa_totp():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
 
-    # 1. Generate new TOTP secret
+   
     secret = pyotp.random_base32()
     user.totp_secret = secret
     db.session.commit()
 
-    # 2. Create OTP Auth URL (compatible with Authenticator app)
+
     otp_uri = pyotp.totp.TOTP(secret).provisioning_uri(name=user.email, issuer_name="FlaskAuthApp")
 
-    # 3. Generate QR code
+
     qr = qrcode.make(otp_uri)
     buf = io.BytesIO()
     qr.save(buf)
@@ -517,31 +509,26 @@ def enable_2fa_totp():
 
 @auth_bp.route('/auth/google')
 def google_login():
-    # Generate the redirect URI for the callback endpoint
     redirect_uri = url_for('auth.google_callback', _external=True)
     return oauth.google.authorize_redirect(redirect_uri)
 
 @auth_bp.route('/auth/google/callback')
 def google_callback():
-    # Retrieve the token and user info from Google
     token = oauth.google.authorize_access_token()
     user_info = oauth.google.parse_id_token(token)
     email = user_info.get('email')
 
-    # Check if user exists in our DB
     user = User.query.filter_by(email=email).first()
     if not user:
-        # Auto-register the user if not found
         user = User(
             email=email,
             username=email.split("@")[0],
-            password="OAuth_Login",  # Dummy value, as password is not used
+            password="OAuth_Login",
             is_active=True
         )
         db.session.add(user)
         db.session.commit()
 
-    # Create JWT tokens for your app
     access_token = create_access_token(identity=str(user.id))
     refresh_token = create_refresh_token(identity=str(user.id))
 
@@ -557,9 +544,6 @@ def google_callback():
         }
     })
 
-# =========================
-# 🚪 Logout
-# =========================
 @auth_bp.route("/logout", methods=["POST"])
 @jwt_required()
 @swag_from({
@@ -599,16 +583,11 @@ def google_callback():
 def logout():
     try:
         jti = get_jwt()["jti"]
-        # Add token to blacklist
-        # This is handled by your token blacklist mechanism
         return jsonify({"message": "Successfully logged out"}), 200
     except Exception as e:
         logger.error(f"Logout failed: {str(e)}")
         return jsonify({"error": "Logout failed"}), 500
 
-# =========================
-# ⚠️ Rate Limit Error Handler
-# =========================
 @auth_bp.errorhandler(RateLimitExceeded)
 def handle_rate_limit_exceeded(e):
     return jsonify({"error": "Rate limit exceeded"}), 429

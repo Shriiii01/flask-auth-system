@@ -9,7 +9,6 @@ import traceback
 
 admin_bp = Blueprint("admin", __name__)
 
-# ✅ CREATE ROLE
 @admin_bp.route("/roles", methods=["POST"])
 @jwt_required()
 @role_required("admin")
@@ -93,7 +92,6 @@ def create_role():
         logger.error(f"Role creation failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Failed to create role"}), 500
 
-# ✅ LIST ROLES
 @admin_bp.route("/roles", methods=["GET"])
 @jwt_required()
 @role_required("admin")
@@ -141,7 +139,6 @@ def list_roles():
         logger.error(f"Failed to list roles: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Failed to retrieve roles"}), 500
 
-# ✅ ASSIGN ROLE TO USER
 @admin_bp.route("/users/<int:user_id>/roles", methods=["POST"])
 @jwt_required()
 @role_required("admin")
@@ -238,7 +235,6 @@ def assign_role(user_id):
         logger.error(f"Role assignment failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Failed to assign role"}), 500
 
-# ✅ REMOVE ROLE FROM USER
 @admin_bp.route("/users/<int:user_id>/roles", methods=["DELETE"])
 @jwt_required()
 @role_required("admin")
@@ -335,7 +331,6 @@ def remove_role(user_id):
         logger.error(f"Role removal failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Failed to remove role"}), 500
 
-# ✅ DELETE ROLE
 @admin_bp.route("/roles/<int:role_id>", methods=["DELETE"])
 @jwt_required()
 @role_required("admin")
@@ -395,7 +390,7 @@ def delete_role(role_id):
         db.session.commit()
         
         log_action(actor_id=get_jwt_identity(), action=f"Deleted role '{role.name}'")
-        logger.info(f"Role deleted successfully: {role.name}")
+        logger.info(f"Role '{role.name}' deleted successfully")
         
         return jsonify({"message": f"Role '{role.name}' deleted successfully"}), 200
 
@@ -403,7 +398,6 @@ def delete_role(role_id):
         logger.error(f"Role deletion failed: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Failed to delete role"}), 500
 
-# ✅ GET ACTIVITY LOGS
 @admin_bp.route("/activity-logs", methods=["GET"])
 @jwt_required()
 @role_required("admin")
@@ -451,13 +445,13 @@ def get_logs():
         logs = ActivityLog.query.order_by(ActivityLog.timestamp.desc()).limit(limit).all()
         
         return jsonify([{
-            'id': log.id,
-            'actor_id': log.actor_id,
-            'action': log.action,
-            'target': log.target,
-            'timestamp': log.timestamp.isoformat()
+            "id": log.id,
+            "actor_id": log.actor_id,
+            "action": log.action,
+            "target": log.target,
+            "timestamp": log.timestamp.isoformat()
         } for log in logs]), 200
-
+        
     except Exception as e:
         logger.error(f"Failed to retrieve activity logs: {str(e)}\n{traceback.format_exc()}")
         return jsonify({"error": "Failed to retrieve activity logs"}), 500

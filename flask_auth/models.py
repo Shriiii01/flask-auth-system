@@ -3,13 +3,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 from datetime import datetime, timedelta
 
-# 🔗 User-Role association table
+
 user_roles = db.Table('user_roles',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
 )
 
-# 🔐 Role Model
+
 class Role(db.Model):
     __tablename__ = 'role'
 
@@ -20,7 +20,7 @@ class Role(db.Model):
     def __repr__(self):
         return f"<Role {self.name}>"
 
-# 👤 User Model
+
 class User(db.Model):
     __tablename__ = 'user'
     
@@ -36,8 +36,6 @@ class User(db.Model):
 
     reset_token = db.Column(db.String(120), nullable=True)
     token_expiration = db.Column(db.DateTime, nullable=True)
-    
-    # Token revocation timestamp
     token_revoked_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     failed_attempts = db.Column(db.Integer, default=0, nullable=False)
@@ -65,7 +63,7 @@ class User(db.Model):
     def verify_reset_token(self, token):
         return self.reset_token == token and self.token_expiration and self.token_expiration > datetime.utcnow()
 
-# 📝 Activity Logger Model
+
 class ActivityLog(db.Model):
     __tablename__ = 'activity_log'
 
@@ -76,3 +74,15 @@ class ActivityLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     actor = db.relationship('User', backref='activity_logs')
+
+
+class Token(db.Model):
+    __tablename__ = 'token'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    token = db.Column(db.String(120), nullable=False)
+    expiration = db.Column(db.DateTime, nullable=False)
+    revoked_at = db.Column(db.DateTime, nullable=True)
+
+    user = db.relationship('User', backref='tokens')
