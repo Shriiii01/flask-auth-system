@@ -44,14 +44,14 @@ Getting Started
 
 Docker (Recommended)
 
-git clone https://github.com/your-username/flask-auth-system.git
+git clone https://github.com/Shriiii01/flask-auth-system.git
 cd flask-auth-system
 cp .env.example .env  # Update your environment variables
 docker-compose up --build
 
 Manual (Local Development)
 
-git clone https://github.com/your-username/flask-auth-system.git
+git clone https://github.com/Shriiii01/flask-auth-system.git
 cd flask-auth-system
 python3 -m venv venv
 source venv/bin/activate
