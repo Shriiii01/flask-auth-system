@@ -5,18 +5,17 @@ from datetime import timedelta
 load_dotenv()
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///instance/app.db")
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///instance/app.db")
+    
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-123")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret-key-123")
+    JWT_ALGORITHM = "HS256"
     
-    ENV = os.getenv("FLASK_ENV", "development")
+    ENV = os.getenv("ENV", "development")
     DEBUG = ENV == "development"
     
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES", "1")))
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=int(os.getenv("JWT_REFRESH_TOKEN_EXPIRES", "30")))
-    JWT_ERROR_MESSAGE_KEY = "message"
     
     CORS_HEADERS = 'Content-Type'
 
