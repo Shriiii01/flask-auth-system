@@ -5,7 +5,15 @@ from datetime import timedelta
 load_dotenv()
 
 class Config:
-    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///instance/app.db")
+    # Supabase Database URL
+    # Format: postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+    # Or use connection pooling: postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[region].pooler.supabase.com:6543/postgres
+    DATABASE_URL = os.getenv("DATABASE_URL", os.getenv("SUPABASE_DATABASE_URL", "sqlite:///instance/app.db"))
+    
+    # Supabase Project Settings (optional, for Supabase client)
+    SUPABASE_URL = os.getenv("SUPABASE_URL")
+    SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+    SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
     
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-123")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret-key-123")
