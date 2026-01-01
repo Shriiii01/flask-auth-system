@@ -59,14 +59,6 @@ async def get_current_user(
             detail="User not found"
         )
     
-    # Check if token has been revoked
-    token_issued_at = payload.get("token_issued_at")
-    if not user or str(user.token_revoked_at) != token_issued_at:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has been revoked"
-        )
-    
     return user
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
