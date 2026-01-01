@@ -10,8 +10,8 @@ from .oauth import configure_oauth
 
 def create_app():
     app = FastAPI(
-        title="Authentication API",
-        description="Full-featured FastAPI Auth System with JWT, OAuth, and Role-based Access Control",
+        title="Simple Auth API",
+        description="Simple authentication system with signup, login, and JWT tokens",
         version="1.0",
         docs_url="/docs",
         redoc_url="/redoc",
