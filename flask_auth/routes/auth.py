@@ -30,8 +30,8 @@ security = HTTPBearer()
 )
 @limiter.limit("3 per minute")
 async def register(
-    user_data: UserRegister,
     request: Request,
+    user_data: UserRegister,
     db: Session = Depends(get_db)
 ):
     try:
@@ -121,8 +121,8 @@ async def verify_email(token: str, db: Session = Depends(get_db)):
 )
 @limiter.limit("5 per minute")
 async def login(
-    user_data: UserLogin,
     request: Request,
+    user_data: UserLogin,
     db: Session = Depends(get_db)
 ):
     try:
