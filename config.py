@@ -34,8 +34,6 @@ class Config:
     MAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
     MAIL_DEFAULT_SENDER = os.getenv("EMAIL_SENDER")
 
-    GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
-    GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
     
     BASE_URL = os.getenv("BASE_URL", "http://localhost:5001")
     
