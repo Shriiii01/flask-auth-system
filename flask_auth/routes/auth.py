@@ -89,7 +89,7 @@ async def login(
         access_token = create_access_token(data={"sub": user.id})
         refresh_token = create_refresh_token(data={"sub": user.id})
         
-        logger.info(f"User logged in: {user.username}")
+        logger.info(f"User logged in successfully: {user.username} (ID: {user.id})")
 
         return {
             "access_token": access_token,
