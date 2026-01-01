@@ -21,10 +21,9 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-ENV FLASK_APP=flask_auth
-ENV FLASK_ENV=development
-ENV FLASK_PORT=5001
+ENV ENV=development
+ENV PORT=5001
 
 EXPOSE 5001
 
-CMD ["gunicorn", "-b", "0.0.0.0:5001", "--workers", "4", "--timeout", "120", "run:app"]
+CMD ["uvicorn", "run:app", "--host", "0.0.0.0", "--port", "5001", "--workers", "4"]
