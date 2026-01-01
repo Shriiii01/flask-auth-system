@@ -112,15 +112,9 @@ async def login(
     summary="Logout",
     description="Logout current user"
 )
-async def logout(
-    current_user: User = Depends(get_current_user)
-):
-    try:
-        logger.info(f"User logged out: {current_user.username}")
-        return {"message": "Successfully logged out"}
-    except Exception as e:
-        logger.error(f"Logout failed: {str(e)}\n{traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail="Logout failed")
+async def logout(current_user: User = Depends(get_current_user)):
+    logger.info(f"User logged out: {current_user.username}")
+    return {"message": "Successfully logged out"}
 
 @router.post(
     "/refresh",
