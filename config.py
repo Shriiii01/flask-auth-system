@@ -37,6 +37,12 @@ class Config:
     
     BASE_URL = os.getenv("BASE_URL", "http://localhost:5001")
     
+    # OAuth Settings
+    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+    GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
+    GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
+    
     REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     
     RATELIMIT_STORAGE_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
