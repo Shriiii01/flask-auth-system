@@ -25,7 +25,7 @@ security = HTTPBearer(auto_error=False)
         400: {"description": "Bad request"}
     }
 )
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 async def signup(
     request: Request,
     user_data: UserRegister,
