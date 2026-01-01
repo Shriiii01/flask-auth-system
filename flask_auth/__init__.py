@@ -1,8 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from config import Config
-from .extensions import limiter, RateLimitExceeded
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from .extensions import limiter
 from .oauth import configure_oauth
 
 def create_app():
@@ -24,22 +27,9 @@ def create_app():
         allow_headers=["*"],
     )
 
-    # Rate limiting exception handler
-    @app.exception_handler(RateLimitExceeded)
-    async def rate_limit_handler(request, exc):
-        response = JSONResponse(
-            {"error": "Rate limit exceeded"},
-            status_code=429
-        )
-        response = limiter._inject_headers(
-            response,
-            request.state.view_args.get("rate_limit", None)
-        )
-        return response
-
     # Initialize rate limiter
     app.state.limiter = limiter
-    app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
     # Include routers
     from .routes.auth import router as auth_router
