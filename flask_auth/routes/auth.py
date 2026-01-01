@@ -12,7 +12,7 @@ import traceback
 from datetime import datetime
 
 router = APIRouter()
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 @router.post(
     "/signup",
