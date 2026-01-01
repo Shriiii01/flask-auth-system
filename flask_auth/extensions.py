@@ -1,10 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_jwt_extended import JWTManager
-from flask_cors import CORS
-from flask_bcrypt import Bcrypt
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 import redis
 import logging
 import os
@@ -14,12 +10,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-db = SQLAlchemy()
-migrate = Migrate()
-jwt = JWTManager()
-cors = CORS()
-bcrypt = Bcrypt()
 
 redis_client = None
 redis_host = os.getenv('REDIS_HOST', 'localhost')
@@ -43,15 +33,5 @@ except (redis.ConnectionError, redis.TimeoutError) as e:
 limiter = Limiter(
     key_func=get_remote_address,
     storage_uri=f"redis://{redis_host}:{redis_port}" if redis_client else "memory://",
-    default_limits=["200 per day", "50 per hour"],
-    strategy="fixed-window"
+    default_limits=["200 per day", "50 per hour"]
 )
-
-def init_extensions(app):
-    db.init_app(app)
-    migrate.init_app(app, db)
-    jwt.init_app(app)
-    cors.init_app(app)
-    bcrypt.init_app(app)
-    limiter.init_app(app)
-    logger.info("All extensions initialized successfully")
