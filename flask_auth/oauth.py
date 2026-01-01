@@ -1,19 +1,21 @@
-from authlib.integrations.flask_client import OAuth
+from authlib.integrations.httpx_client import AsyncOAuth2Client
 import os
+from config import Config
 
-oauth = OAuth()
+oauth_client = None
 
 def configure_oauth(app):
-    oauth.init_app(app)
+    global oauth_client
+    oauth_client = AsyncOAuth2Client(
+        client_id=Config.GITHUB_CLIENT_ID,
+        client_secret=Config.GITHUB_CLIENT_SECRET,
+        scope='user:email'
+    )
 
-oauth.register(
-    name='github',
-    client_id=os.getenv("GITHUB_CLIENT_ID"),
-    client_secret=os.getenv("GITHUB_CLIENT_SECRET"),
-    access_token_url='https://github.com/login/oauth/access_token',
-    authorize_url='https://github.com/login/oauth/authorize',
-    api_base_url='https://api.github.com/',
-    client_kwargs={'scope': 'user:email'},
-    userinfo_endpoint='https://api.github.com/user'
-)
+def get_github_oauth_client():
+    return AsyncOAuth2Client(
+        client_id=Config.GITHUB_CLIENT_ID,
+        client_secret=Config.GITHUB_CLIENT_SECRET,
+        scope='user:email'
+    )
 
