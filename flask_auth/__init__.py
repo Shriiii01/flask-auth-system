@@ -6,7 +6,6 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from .extensions import limiter
-from .oauth import configure_oauth
 
 def create_app():
     app = FastAPI(
@@ -37,8 +36,5 @@ def create_app():
 
     app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
     app.include_router(main_router, tags=["Main"])
-
-    # Configure OAuth
-    configure_oauth(app)
 
     return app
