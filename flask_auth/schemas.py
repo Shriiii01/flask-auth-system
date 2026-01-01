@@ -19,4 +19,5 @@ class RefreshTokenResponse(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+    user_id: int = None
 
