@@ -34,11 +34,9 @@ def create_app():
     # Include routers
     from .routes.auth import router as auth_router
     from .routes.main import router as main_router
-    from .routes.admin_routes import router as admin_router
 
     app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
     app.include_router(main_router, tags=["Main"])
-    app.include_router(admin_router, prefix="/admin", tags=["Admin"])
 
     # Configure OAuth
     configure_oauth(app)
