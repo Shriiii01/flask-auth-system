@@ -113,12 +113,9 @@ async def login(
     description="Logout current user"
 )
 async def logout(
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user)
 ):
     try:
-        current_user.token_revoked_at = datetime.utcnow()
-        db.commit()
         logger.info(f"User logged out: {current_user.username}")
         return {"message": "Successfully logged out"}
     except Exception as e:
