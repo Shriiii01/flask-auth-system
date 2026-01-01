@@ -97,7 +97,8 @@ async def login(
             "user": {
                 "id": user.id,
                 "username": user.username,
-                "email": user.email
+                "email": user.email,
+                "created_at": user.created_at.isoformat() if user.created_at else None
             }
         }
 
