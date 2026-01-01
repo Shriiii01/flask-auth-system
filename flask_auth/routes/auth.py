@@ -84,7 +84,7 @@ async def login(
             raise HTTPException(status_code=401, detail="Invalid email or password")
 
         if not user.is_active:
-            raise HTTPException(status_code=401, detail="Account is deactivated")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is deactivated")
 
         access_token = create_access_token(data={"sub": user.id})
         refresh_token = create_refresh_token(data={"sub": user.id})
