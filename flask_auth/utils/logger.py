@@ -1,11 +1,11 @@
-from ..models import ActivityLog, db
-from flask_jwt_extended import get_jwt_identity
+from ..models import ActivityLog
+from sqlalchemy.orm import Session
 
-def log_action(actor_id, action, target=None):
+def log_action(db: Session, actor_id: int, action: str, target: str = None):
     log = ActivityLog(
         actor_id=actor_id,
         action=action,
         target=target
     )
-    db.session.add(log)
-    db.session.commit()
+    db.add(log)
+    db.commit()
