@@ -37,4 +37,17 @@ def create_app():
     app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
     app.include_router(main_router, tags=["Main"])
 
+    # Serve static files
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+    if os.path.exists(static_dir):
+        app.mount("/static", StaticFiles(directory=static_dir), name="static")
+    
+    # Serve index.html at root
+    @app.get("/", include_in_schema=False)
+    async def read_root():
+        index_path = os.path.join(static_dir, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+        return {"message": "API is running. Visit /docs for API documentation."}
+
     return app
