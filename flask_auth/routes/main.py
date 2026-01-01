@@ -15,6 +15,7 @@ async def home(current_user: User = Depends(get_current_active_user)):
         "user": {
             "id": current_user.id,
             "username": current_user.username,
-            "email": current_user.email
+            "email": current_user.email,
+            "created_at": current_user.created_at.isoformat() if current_user.created_at else None
         }
     } 
