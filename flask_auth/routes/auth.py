@@ -77,7 +77,10 @@ async def login(
 ):
     try:
         user = db.query(User).filter(User.email == user_data.email).first()
-        if not user or not user.check_password(user_data.password):
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+        
+        if not user.check_password(user_data.password):
             raise HTTPException(status_code=401, detail="Invalid email or password")
 
         if not user.is_active:
