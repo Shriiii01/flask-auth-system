@@ -2,8 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 from slowapi import Limiter
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
 from ..database import get_db
 from ..models import User
 from ..utils.jwt import create_access_token, create_refresh_token, verify_token, get_current_user
