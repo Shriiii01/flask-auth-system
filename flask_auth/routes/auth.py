@@ -50,7 +50,10 @@ async def signup(
         db.refresh(new_user)
         logger.info(f"User signed up: {user_data.username}")
         
-        return {"message": "User created successfully", "user_id": new_user.id}
+        return {
+            "message": "User created successfully",
+            "user_id": new_user.id
+        }
             
     except HTTPException:
         raise
