@@ -1,44 +1,22 @@
-Advanced Flask Authentication System
+Simple FastAPI Authentication System
 
-This project demonstrates a robust, enterprise-ready authentication system built from the ground up using Flask. It combines modern best practices, industry-standard security techniques, and clean architecture to deliver a reliable backend solution ready to scale and adapt to any real-world application.
-
-Whether you're building a SaaS, internal tool, or public API, this is the kind of authentication system you'd trust your product and user security to.
-
-Overview
-
-Almost every meaningful web application needs authentication. But getting authentication right involves navigating tricky security concerns, database management, token handling, and scalability issues. Instead of relying on third-party services that limit control or add hidden costs, I built this authentication system from scratch—secure, efficient, and ready for production use.
-
-This project isn't a basic tutorial demo; it's an extensive implementation that tackles real-world security scenarios head-on.
+A clean and simple authentication system built with FastAPI. Features basic signup, login, logout, and token refresh functionality.
 
 Key Features
 
-JWT Authentication: Secure generation and validation of access and refresh tokens.
-OAuth Integration: Seamless GitHub OAuth authentication.
-Email Verification & Password Management: Full flow with secure token-based email verification, password reset, and password changes.
-Role-Based Access Control (RBAC): Flexible roles and permissions framework suitable for large teams and complex authorization needs.
-Rate Limiting & Security: Advanced rate limiting strategies using Redis to prevent abuse and brute-force attacks.
-Containerized Deployment: Dockerized with PostgreSQL, Redis, and Gunicorn for easy deployment.
-Comprehensive Documentation: Fully documented APIs using Swagger UI and Postman collections for easy API testing and integration.
-Structured Logging & Monitoring: Clear logs, detailed error tracking, and global exception handling for easier debugging and maintenance.
-Authentication Flow
+- Simple Signup & Login: Easy user registration and authentication
+- JWT Tokens: Secure access and refresh tokens
+- Supabase Database: Uses Supabase PostgreSQL for data storage
+- Rate Limiting: Protection against abuse using Redis
+- API Documentation: Built-in Swagger UI documentation
 
-The system implements a complete user lifecycle:
-
-Users register and receive an email verification link.
-After verification, users log in and receive JWT tokens.
-Tokens grant access to protected endpoints.
-Tokens can be refreshed securely.
-Users can securely reset or change passwords.
-Admins manage roles, assign permissions, and monitor user activity.
 Tech Stack
 
-Framework: Flask
-Database: PostgreSQL (SQLAlchemy ORM)
-Authentication: JWT via Flask-JWT-Extended
-OAuth: GitHub OAuth (Authlib)
-Documentation: Swagger UI (Flasgger), Postman collection
-Deployment & Containerization: Docker, Gunicorn
-Security & Performance: Redis for rate-limiting and token management
+- Framework: FastAPI
+- Database: Supabase (PostgreSQL)
+- Authentication: JWT via python-jose
+- Rate Limiting: slowapi with Redis
+- Deployment: Docker with Uvicorn
 
 Getting Started
 
