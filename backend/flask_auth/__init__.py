@@ -1,11 +1,14 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from config import Config
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from .extensions import limiter
+import os
 
 def create_app():
     app = FastAPI(
@@ -37,8 +40,10 @@ def create_app():
     app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
     app.include_router(main_router, tags=["Main"])
 
-    # Serve static files
-    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+    # Serve static files (static directory is in project root, one level up from backend)
+    backend_dir = os.path.dirname(os.path.dirname(__file__))
+    project_root = os.path.dirname(backend_dir)
+    static_dir = os.path.join(project_root, "static")
     if os.path.exists(static_dir):
         app.mount("/static", StaticFiles(directory=static_dir), name="static")
     
