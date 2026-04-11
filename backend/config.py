@@ -1,14 +1,31 @@
 from dotenv import load_dotenv
 import os
 from datetime import timedelta
+from pathlib import Path
 
 load_dotenv()
+
+_BACKEND_DIR = Path(__file__).resolve().parent
+_INSTANCE_DIR = _BACKEND_DIR / "instance"
+_SQLITE_DEFAULT = f"sqlite:///{(_INSTANCE_DIR / 'app.db').as_posix()}"
+
+
+def _resolved_database_url() -> str:
+    """Use Postgres when configured; otherwise SQLite under backend/instance/."""
+    raw = (os.getenv("DATABASE_URL") or os.getenv("SUPABASE_DATABASE_URL") or "").strip()
+    if not raw:
+        return _SQLITE_DEFAULT
+    # Template / incomplete Supabase URLs from .env.example — run locally without Postgres
+    if "[YOUR-PASSWORD]" in raw or "[region]" in raw.lower():
+        return _SQLITE_DEFAULT
+    return raw
+
 
 class Config:
     # Supabase Database URL
     # Format: postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
     # Or use connection pooling: postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[region].pooler.supabase.com:6543/postgres
-    DATABASE_URL = os.getenv("DATABASE_URL", os.getenv("SUPABASE_DATABASE_URL", "sqlite:///instance/app.db"))
+    DATABASE_URL = _resolved_database_url()
     
     # Supabase Project Settings (optional, for Supabase client)
     SUPABASE_URL = os.getenv("SUPABASE_URL")

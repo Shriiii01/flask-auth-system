@@ -6,9 +6,7 @@ services:
     ports:
       - "5001:5001"
     environment:
-      - FLASK_APP=flask_auth
-      - FLASK_ENV=development
-      - FLASK_PORT=5001
+      - ENV=development
       - REDIS_URL=redis://redis:6379/0
     volumes:
       - .:/app

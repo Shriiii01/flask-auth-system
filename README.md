@@ -35,8 +35,8 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env  # Update environment variables accordingly
-flask db upgrade
-flask run
+cd backend
+python run.py
 
 Access Swagger documentation at:
 http://localhost:5001/docs
@@ -50,20 +50,19 @@ Project Structure
 
 The architecture follows a logical and modular design:
 
-flask_auth/
+backend/auth/
 ├── routes/
-│   ├── auth.py
-│   ├── main.py
-│   └── admin_routes.py
-├── models/
-│   └── user.py, role.py, logs.py
+│   ├── auth.py      # signup, login, logout, refresh, OAuth
+│   └── main.py      # /api/me, health
 ├── utils/
-│   └── decorators, logger, helpers
+│   └── jwt.py
+├── models.py
+├── database.py
 ├── extensions.py
-├── config.py
-├── Dockerfile
-├── docker-compose.yml
-├── run.py
+├── schemas.py
+├── oauth.py
+backend/config.py
+backend/run.py
 
 Security and Best Practices
 

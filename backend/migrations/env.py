@@ -8,8 +8,8 @@ import os
 # Add parent directory to path to import config
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from config import Config
-from flask_auth.database import Base
-from flask_auth.models import User  # Import all models
+from auth.database import Base
+from auth.models import User  # noqa: F401 — ensure models registered on metadata
 
 # this is the Alembic Config object
 config = context.config
